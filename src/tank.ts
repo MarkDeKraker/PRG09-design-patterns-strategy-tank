@@ -3,6 +3,13 @@ import { GameObject }       from "./gameobject.js";
 import { Turret }           from "./turret.js";
 import { Vector }           from "./vector.js";
 import { BulletStrategy } from "./strategy/bulletStrategy.js";
+import { Bullet } from "./projectiles/bullet.js";
+import { Missile } from "./projectiles/missile.js";
+import { Rocket } from "./projectiles/rocket.js";
+import { GodBullet } from "./projectiles/godbullet.js";
+import { MissileStrategy } from "./strategy/missileStrategy.js";
+import { RocketStrategy } from "./strategy/rocketStrategy.js";
+import { GodBulletStrategy } from "./strategy/godBulletStrategy.js";
 
 export class Tank extends GameObject {
     private readonly FRICTION       : number    = 0.3  
@@ -104,7 +111,21 @@ export class Tank extends GameObject {
     }
 
     onCollision(target: GameObject): void {
-       
+        // Wrong way of doing the switching, the strategy pattern fixes this!
+    //    switch(true){
+    //         case(target instanceof Bullet):
+    //             this.switchStrategy(new BulletStrategy(this))
+    //             break;
+    //         case(target instanceof Missile):
+    //             this.switchStrategy(new MissileStrategy(this))
+    //             break;
+    //         case(target instanceof Rocket):
+    //             this.switchStrategy(new RocketStrategy(this))
+    //             break;
+    //         case(target instanceof GodBullet):
+    //             this.switchStrategy(new GodBulletStrategy(this))
+    //             break;
+    //    }
     }
 
     private keepInWindow() {
@@ -115,7 +136,7 @@ export class Tank extends GameObject {
     }
 
     // Public function that switches the strategy when a ammobox hits the tank.
-    public switchStrategy(strategy: ITankShootStrategy){
+    public switchStrategy(strategy: ITankShootStrategy): void{
         this.fireStrategy = strategy
     }
 

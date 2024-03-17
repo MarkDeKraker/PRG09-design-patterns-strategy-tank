@@ -7,7 +7,8 @@ export class MissileStrategy implements ITankShootStrategy{
     constructor(tank: Tank){
         this.tank = tank;
     }
-
+    
+    // fire() method available because it implements the ITankShootStrategy!
     fire(): void {
         this.tank.game.gameObjects.push(new Missile(this.tank))
     }
