@@ -5,6 +5,7 @@ import { Vector }       from "./vector.js"
 import { BulletAmmo }   from "./ammo/bulletammo.js"
 import { RocketAmmo }   from "./ammo/rocketammo.js"
 import { MissileAmmo }  from "./ammo/missileammo.js"
+import { GodBulletAmmo } from "./ammo/godbulletammo.js"
 
 export class Game {
 
@@ -15,7 +16,8 @@ export class Game {
         this.gameObjects.push(new BulletAmmo(new Vector(800, 200)))
         this.gameObjects.push(new RocketAmmo(new Vector(500, 200)))
         this.gameObjects.push(new MissileAmmo(new Vector(500, 500)))
-        
+        this.gameObjects.push(new GodBulletAmmo(new Vector(800, 500)))
+
         let tank = new Tank(this)
         this.gameObjects.push(tank)
         

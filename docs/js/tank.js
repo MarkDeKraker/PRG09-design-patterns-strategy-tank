@@ -1,7 +1,7 @@
-import { Bullet } from "./projectiles/bullet.js";
 import { GameObject } from "./gameobject.js";
 import { Turret } from "./turret.js";
 import { Vector } from "./vector.js";
+import { BulletStrategy } from "./strategy/bulletStrategy.js";
 export class Tank extends GameObject {
     get Speed() { return this.speed; }
     get Turret() { return this.turret; }
@@ -23,6 +23,7 @@ export class Tank extends GameObject {
         this.speed = new Vector(0, 0);
         this.rotation = 0;
         this.turret = new Turret(this);
+        this.fireStrategy = new BulletStrategy(this);
         window.addEventListener("keydown", (e) => this.handleKeyDown(e));
         window.addEventListener("keyup", (e) => this.handleKeyUp(e));
     }
@@ -75,7 +76,8 @@ export class Tank extends GameObject {
     }
     fire() {
         if (this.canFire && !this.previousState) {
-            this.game.gameObjects.push(new Bullet(this));
+            console.log(this);
+            this.fireStrategy.fire();
             this.previousState = true;
             this.canFire = false;
             setTimeout(() => { this.canFire = true; }, this.fireRate);
@@ -92,6 +94,9 @@ export class Tank extends GameObject {
             this.position.x = -this.width;
         if (this.position.y > window.innerHeight)
             this.position.y = -this.height;
+    }
+    switchStrategy(strategy) {
+        this.fireStrategy = strategy;
     }
     degToRad(degrees) {
         return degrees * Math.PI / 180;

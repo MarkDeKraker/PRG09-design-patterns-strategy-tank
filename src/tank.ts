@@ -1,8 +1,8 @@
-import { Bullet }           from "./projectiles/bullet.js";
 import { Game }             from "./game.js";
 import { GameObject }       from "./gameobject.js";
 import { Turret }           from "./turret.js";
 import { Vector }           from "./vector.js";
+import { BulletStrategy } from "./strategy/bulletStrategy.js";
 
 export class Tank extends GameObject {
     private readonly FRICTION       : number    = 0.3  
@@ -16,7 +16,7 @@ export class Tank extends GameObject {
     private previousState   : boolean   = false
     private rotationSpeed   : number    = 2
     private turret          : Turret
-    private game            : Game
+    public game          : Game
     private fireRate        : number    = 100
     
     protected speed         : Vector    = new Vector(0, 0)
@@ -24,6 +24,9 @@ export class Tank extends GameObject {
     // Properties
     public get Speed()  : Vector { return this.speed }
     public get Turret() : Turret { return this.turret }
+
+    // Strategy
+    private fireStrategy    : ITankShootStrategy
     
     constructor(game:Game) {
         super("tank-body")
@@ -36,6 +39,8 @@ export class Tank extends GameObject {
         this.rotation   = 0
         
         this.turret = new Turret(this)
+
+        this.fireStrategy = new BulletStrategy(this)
 
         window.addEventListener("keydown",  (e : KeyboardEvent) => this.handleKeyDown(e))
         window.addEventListener("keyup",    (e : KeyboardEvent) => this.handleKeyUp(e))
@@ -88,7 +93,8 @@ export class Tank extends GameObject {
 
     private fire() {
         if(this.canFire && !this.previousState) {
-            this.game.gameObjects.push(new Bullet(this))
+            console.log(this);
+            this.fireStrategy.fire()
             this.previousState = true
             this.canFire = false
             
@@ -98,7 +104,7 @@ export class Tank extends GameObject {
     }
 
     onCollision(target: GameObject): void {
-        // throw new Error("Method not implemented.");
+       
     }
 
     private keepInWindow() {
@@ -106,6 +112,11 @@ export class Tank extends GameObject {
         if(this.position.y + this.height< 0)        this.position.y = window.innerHeight
         if(this.position.x > window.innerWidth)     this.position.x = -this.width
         if(this.position.y > window.innerHeight)    this.position.y = -this.height
+    }
+
+    // Public function that switches the strategy when a ammobox hits the tank.
+    public switchStrategy(strategy: ITankShootStrategy){
+        this.fireStrategy = strategy
     }
 
     /**
